@@ -8,6 +8,7 @@ import ErrorHandler from './error/errorHandler';
 import {HeaderValidation} from './validating/headerValidation';
 import HealthController from './api/health/health.controller';
 import Logger from './logging/logger';
+import OrganizationController from './api/organization/organization.controller';
 import UserController from './api/user/user.controller';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -62,7 +63,8 @@ export default class Server {
   private initializeControllers(): void {
     this.app.use(`/`, new HealthController('/health').router);
     this.app.use(`/${this.apiHome}`, new AuthController('').router);
-    this.app.use(`/${this.apiHome}/**`, new UserController('/user').router);
+    this.app.use(`/${this.apiHome}`, new UserController('/user').router);
+    this.app.use(`/${this.apiHome}`, new OrganizationController('/organization').router);
   }
 
   /**

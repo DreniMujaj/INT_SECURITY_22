@@ -16,6 +16,17 @@ class OrganizationController extends Controller {
    * Initialize Test Routes
    */
   initializeRoutes(): void {
+    this.createRoute(HttpMethod.GET, '/', {}, this.getAllOrganizations);
+  }
+
+  /**
+   * getAllUsers
+   *
+   * @param request Express Request
+   * @param response Express Response
+   */
+  private async getAllOrganizations(request: Request, response: Response): Promise<void> {
+    response.json({});
   }
 }
 
