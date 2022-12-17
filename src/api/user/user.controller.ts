@@ -14,9 +14,20 @@ class UserController extends Controller {
    * Initialize Test Routes
    */
   initializeRoutes(): void {
+    this.createRoute(HttpMethod.GET, '/', {}, this.getAllUsers);
     this.createRoute(HttpMethod.GET, '/me', {}, this.getCurrentUser);
   }
 
+  /**
+   * getAllUsers
+   *
+   * @param request Express Request
+   * @param response Express Response
+   */
+  private async getAllUsers(request: Request, response: Response): Promise<void> {
+    const user = await UserService.getMyUser(request.auth!);
+    response.json(user);
+  }
 
   /**
    * getCurrentUser

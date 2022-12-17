@@ -5,17 +5,16 @@ import Logger from '../../logging/logger';
 import {Role} from '../../auth/@types/roles';
 import Server from '../../server';
 import User from './user.model';
+import {mockLogin} from '../../../test/util/mockLogin';
 import {randomUUID} from 'crypto';
 import request from 'supertest';
 
 let token: string;
-let userAdminToken: string;
-let organization: any;
-
 describe('User Controller', () => {
   beforeAll(async () => {
     Logger.silent = true;
     await Server.getInstance().start();
+    token = await mockLogin([Role.ADMIN]);
   });
 
   it('get the user endpoint', async () => {
