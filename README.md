@@ -1,2 +1,2 @@
-# bubble
-a new way of sharing and caring
+# Manage Files
+University project on "Internet Security" subject.
