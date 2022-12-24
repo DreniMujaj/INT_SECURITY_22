@@ -1,15 +1,12 @@
 import express, {Express} from 'express';
 
-import AuthController from './api/auth/auth.controller';
-import Authorization from './auth/authorization';
 import Database from './database/database';
 import Environment from './env';
 import ErrorHandler from './error/errorHandler';
+import FileController from './api/fileUpload/fileUpload.controller';
 import {HeaderValidation} from './validating/headerValidation';
 import HealthController from './api/health/health.controller';
 import Logger from './logging/logger';
-import OrganizationController from './api/organization/organization.controller';
-import UserController from './api/user/user.controller';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import {createServer} from 'http';
@@ -54,7 +51,6 @@ export default class Server {
     this.app.use(bodyParser.urlencoded({extended: true}));
     this.app.use(morganMiddleware);
     this.app.use(HeaderValidation.contentTypeCheckMiddleware);
-    this.app.use(`/${this.apiHome}/**`, Authorization.authenticationMiddleware);
   }
 
   /**
@@ -62,9 +58,7 @@ export default class Server {
    */
   private initializeControllers(): void {
     this.app.use(`/`, new HealthController('/health').router);
-    this.app.use(`/${this.apiHome}`, new AuthController('').router);
-    this.app.use(`/${this.apiHome}`, new UserController('/user').router);
-    this.app.use(`/${this.apiHome}`, new OrganizationController('/organization').router);
+    this.app.use(`/${this.apiHome}`, new FileController('/file').router);
   }
 
   /**

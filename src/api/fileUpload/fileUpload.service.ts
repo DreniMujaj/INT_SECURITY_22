@@ -1,0 +1,7 @@
+/**
+ * FileService
+ *
+ */
+export class FileService {
+
+}
