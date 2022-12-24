@@ -1,8 +1,6 @@
 import {RequestHandler, Router} from 'express';
 
-import Authorization from '../auth/authorization';
 import {HttpMethod} from '../util/httpMethod';
-import {Role} from '../auth/@types/roles';
 import Validator from '../validating/validator';
 
 /**
@@ -27,50 +25,33 @@ export default abstract class Controller {
    * @param method Http Method
    * @param path Local Path of the route
    * @param middlewares Roles, Scope, and body validation required to access route
-   * @param middlewares.roles Roles required to access route
    * @param middlewares.validation Body validation required to access route
    * @param handlers Additional Middlewares
    */
-  protected createRoute(method: HttpMethod, path: string, middlewares: {roles?: Role[]; validation?: any}, ...handlers: Array<RequestHandler>): void {
+  protected createRoute(method: HttpMethod, path: string, middlewares: {validation?: any}, ...handlers: Array<RequestHandler>): void {
     switch (method) {
       case HttpMethod.GET:
         if (middlewares.validation) {
           throw new Error('Trying to register body validator for a GET request');
         }
-        if (middlewares.roles) {
-          this.router.get(`${this.path}${path}`, Authorization.authorizationMiddleware(middlewares.roles), ...handlers);
-        } else {
-          this.router.get(`${this.path}${path}`, ...handlers);
-        }
+        this.router.get(`${this.path}${path}`, ...handlers);
         break;
       case HttpMethod.POST:
-        if (middlewares.roles && middlewares.validation) {
-          this.router.post(`${this.path}${path}`, Authorization.authorizationMiddleware(middlewares.roles), Validator.dtoValidationMiddleware(middlewares.validation), ...handlers);
-        } else if (middlewares.roles && !middlewares.validation) {
-          this.router.post(`${this.path}${path}`, Authorization.authorizationMiddleware(middlewares.roles), ...handlers);
-        } else if (!middlewares.roles && middlewares.validation) {
+        if (middlewares.validation) {
           this.router.post(`${this.path}${path}`, Validator.dtoValidationMiddleware(middlewares.validation), ...handlers);
         } else {
           this.router.post(`${this.path}${path}`, ...handlers);
         }
         break;
       case HttpMethod.PUT:
-        if (middlewares.roles && middlewares.validation) {
-          this.router.put(`${this.path}${path}`, Authorization.authorizationMiddleware(middlewares.roles), Validator.dtoValidationMiddleware(middlewares.validation), ...handlers);
-        } else if (middlewares.roles && !middlewares.validation) {
-          this.router.put(`${this.path}${path}`, Authorization.authorizationMiddleware(middlewares.roles), ...handlers);
-        } else if (!middlewares.roles && middlewares.validation) {
+        if (middlewares.validation) {
           this.router.put(`${this.path}${path}`, Validator.dtoValidationMiddleware(middlewares.validation), ...handlers);
         } else {
           this.router.put(`${this.path}${path}`, ...handlers);
         }
         break;
       case HttpMethod.DELETE:
-        if (middlewares.roles && middlewares.validation) {
-          this.router.delete(`${this.path}${path}`, Authorization.authorizationMiddleware(middlewares.roles), Validator.dtoValidationMiddleware(middlewares.validation), ...handlers);
-        } else if (middlewares.roles && !middlewares.validation) {
-          this.router.delete(`${this.path}${path}`, Authorization.authorizationMiddleware(middlewares.roles), ...handlers);
-        } else if (!middlewares.roles && middlewares.validation) {
+        if (middlewares.validation) {
           this.router.delete(`${this.path}${path}`, Validator.dtoValidationMiddleware(middlewares.validation), ...handlers);
         } else {
           this.router.delete(`${this.path}${path}`, ...handlers);
