@@ -4,7 +4,6 @@ import Database from './database/database';
 import Environment from './env';
 import ErrorHandler from './error/errorHandler';
 import FileController from './api/fileUpload/fileUpload.controller';
-import {HeaderValidation} from './validating/headerValidation';
 import HealthController from './api/health/health.controller';
 import Logger from './logging/logger';
 import bodyParser from 'body-parser';
@@ -12,6 +11,7 @@ import cors from 'cors';
 import {createServer} from 'http';
 import helmet from 'helmet';
 import morganMiddleware from './logging/morgan';
+import multer from 'multer';
 
 /**
  * Class representing the Server
@@ -23,6 +23,8 @@ export default class Server {
   private port: number;
   private apiHome: string;
   private database: Database;
+  private maxUploadFileSize: number;
+  private tempFolder: string;
 
   /**
    * Create a new Server
@@ -30,6 +32,8 @@ export default class Server {
   private constructor() {
     this.port = Environment.PORT() || parseInt('3000');
     this.apiHome = `${Environment.SERVER_API_HOME()}`;
+    this.maxUploadFileSize = Environment.MAX_UPLOAD_FILESIZE();
+    this.tempFolder = Environment.TEMP_FOLDER();
     this.app = express();
     this.app.use(helmet());
     this.app.use(cors());
@@ -49,8 +53,10 @@ export default class Server {
   private initializePreRouteMiddlewares(): void {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({extended: true}));
+
+    this.app.use(multer({dest: this.tempFolder, limits: {fileSize: this.maxUploadFileSize}}).single('file'));
+
     this.app.use(morganMiddleware);
-    this.app.use(HeaderValidation.contentTypeCheckMiddleware);
   }
 
   /**

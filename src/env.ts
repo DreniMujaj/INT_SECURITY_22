@@ -23,6 +23,37 @@ declare global {
  * Environment
  */
 export default class Environment {
+  /**
+   * MAX_UPLOAD_FILESIZE
+   *
+   * @returns MAX_UPLOAD_FILESIZE
+   */
+  public static MAX_UPLOAD_FILESIZE(): number {
+    if (!this.instance) {
+      this.instance = new Environment();
+    }
+    if (process.env.MAX_UPLOAD_FILESIZE) {
+      return Number(process.env.MAX_UPLOAD_FILESIZE);
+    } else {
+      throw new Error('Environment MAX_UPLOAD_FILESIZE is not defined');
+    }
+  }
+
+  /**
+   * TEMP_FOLDER
+   *
+   * @returns TEMP_FOLDER
+   */
+  public static TEMP_FOLDER(): string {
+    if (!this.instance) {
+      this.instance = new Environment();
+    }
+    if (process.env.TEMP_FOLDER) {
+      return process.env.TEMP_FOLDER;
+    } else {
+      throw new Error('Environment TEMP_FOLDER is not defined');
+    }
+  }
   private static instance: Environment;
 
   /**
@@ -68,6 +99,52 @@ export default class Environment {
     }
   }
 
+  /**
+   * FTP PORT
+   *
+   * @returns FTP PORT
+   */
+  public static FTP_PORT(): number {
+    if (!this.instance) {
+      this.instance = new Environment();
+    }
+    if (process.env.FTP_PORT) {
+      return parseInt(process.env.FTP_PORT);
+    } else {
+      throw new Error('Environment FTP_PORT is not defined');
+    }
+  }
+  /**
+   * FTP_USER
+   *
+   * @returns FTP_USER
+   */
+  public static FTP_USER(): string {
+    if (!this.instance) {
+      this.instance = new Environment();
+    }
+    if (process.env.FTP_USER) {
+      return process.env.FTP_USER;
+    } else {
+      throw new Error('Environment FTP_USER is not defined');
+    }
+  }
+
+  /**
+   * IP_ADDRESS
+   *
+   * @returns IP_ADDRESS
+   */
+  public static IP_ADDRESS(): string {
+    if (!this.instance) {
+      this.instance = new Environment();
+    }
+    if (process.env.IP_ADDRESS) {
+      return process.env.IP_ADDRESS;
+    } else {
+      throw new Error('Environment IP_ADDRESS is not defined');
+    }
+  }
   /**
    * SERVER_API_HOME
    *

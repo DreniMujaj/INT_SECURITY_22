@@ -4,7 +4,7 @@ import BadRequestError from '../../error/@types/badRequestError';
 import Controller from '../controller';
 import {CreateFileDTO} from './dto/request/createFile.dto';
 import {Express} from 'express';
-import {FileService} from './file.service';
+import {FileService} from './fileUpload.service';
 import {HttpMethod} from '../../util/httpMethod';
 import {HttpStatusCode} from '../../util/httpStatusCode';
 import path from 'path';
@@ -35,19 +35,6 @@ class FileController extends Controller {
       response.status(HttpStatusCode.CREATED).json(res);
     } catch (e) {
       next(e);
-    }
-  }
-
-  /**
-   * validateDocument
-   *
-   * @param body body
-   * @param file file
-   */
-  public static async validateDocument(body: CreateFileDTO, file: Express.Multer.File): Promise<void> {
-    const extension = path.extname(file.originalname);
-    if (!['.pdf', '.docx', '.xlsx', '.pptx'].includes(extension)) {
-      throw new BadRequestError(`Invalid format ${extension}`);
     }
   }
 }
